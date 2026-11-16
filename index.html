@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Hard Scatter</title>
-<meta name="description" content="Hard Scatter — artificial intelligence. real science." />
+<meta name="description" content="Hard Scatter. artificial intelligence. real science." />
 <style>
   :root {
     --bg: #05060a;
@@ -275,6 +275,28 @@
   .card h3 { margin: 0 0 10px; font-size: 20px; letter-spacing: -0.01em; }
   .card p { margin: 0; color: var(--muted); font-size: 15px; }
 
+  /* split: text + event display */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  @media (max-width: 860px) { .split { grid-template-columns: 1fr; gap: 36px; } }
+  .split-text p { color: var(--muted); font-size: 16px; margin: 0 0 18px; }
+  .split-text p:last-child { margin-bottom: 0; }
+  .event-display {
+    margin: 0;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 18px;
+    background:
+      radial-gradient(circle at 50% 46%, rgba(110,231,255,0.07), transparent 70%),
+      var(--bg-soft);
+  }
+  .event-display canvas { width: 100%; height: auto; display: block; border-radius: 12px; }
+  .event-display figcaption { color: var(--muted); font-size: 13px; margin-top: 14px; text-align: center; }
+
   /* stats */
   .stats {
     display: grid;
@@ -371,8 +393,8 @@
       <div class="wrap nav-inner">
         <a class="brand" href="#top"><span class="dot"></span> Hard Scatter</a>
         <div class="nav-links">
-          <a href="#what">Platform</a>
-          <a href="#how">Approach</a>
+          <a href="#what">Product</a>
+          <a href="#how">Science</a>
           <a href="#numbers">Results</a>
           <a class="btn btn-ghost" href="#join">Request access</a>
         </div>
@@ -406,26 +428,26 @@
     <section id="what">
       <div class="wrap">
         <div class="section-head reveal">
-          <div class="kicker">The platform</div>
+          <div class="kicker">The Product</div>
           <h2>RL environments built from real physics.</h2>
-          <p class="lead">Hard Scatter turns unsolved experimental physics challenges into reinforcement-learning environments — with continuous, automatically verified rewards — to train AI agents that reason their way to new scientific results. The goal: autonomous scientific reasoning agents.</p>
+          <p class="lead">Hard Scatter turns unsolved experimental physics challenges into reinforcement-learning environments, with continuous, automatically verified rewards, to train AI agents that reason their way to new scientific results. The goal: autonomous scientific reasoning agents.</p>
         </div>
 
         <div class="grid">
           <div class="card reveal">
             <div class="icon">⚛️</div>
             <h3>Experimental challenges</h3>
-            <p>Each environment is a genuine open problem from the frontier of experimental physics — posed as an open-ended optimization task, not a multiple-choice benchmark.</p>
+            <p>Each environment is a genuine open problem from the frontier of experimental physics, posed as an open-ended optimization task, not a multiple-choice benchmark.</p>
           </div>
           <div class="card reveal">
             <div class="icon">🎯</div>
             <h3>Verifiable rewards</h3>
-            <p>Every attempt is scored automatically against the physics — continuous reward, no human in the loop — so an agent can measurably improve run after run.</p>
+            <p>Every attempt is scored automatically against the physics, with continuous reward and no human in the loop, so an agent can measurably improve run after run.</p>
           </div>
           <div class="card reveal">
             <div class="icon">🤖</div>
             <h3>Autonomous agents</h3>
-            <p>The goal isn't reproducing known workflows. It's self-improving agents that reason toward — and discover — better scientific solutions on their own.</p>
+            <p>The goal isn't reproducing known workflows. It's self-improving agents that reason toward, and discover, better scientific solutions on their own.</p>
           </div>
         </div>
       </div>
@@ -434,27 +456,20 @@
     <section id="how">
       <div class="wrap">
         <div class="section-head reveal">
-          <div class="kicker">Why it's hard</div>
+          <div class="kicker">The Science</div>
           <h2>Closing a proof is one thing. Real data is another.</h2>
-          <p class="lead">Lately the headlines belong to AI systems cracking famous theorems and closed-form results — clean statements, exact answers, no noise. Experimental science doesn't hand you that. It hands you detector noise, systematic uncertainties, and data that argues back.</p>
+          <p class="lead">Lately the headlines belong to AI systems cracking famous theorems and closed-form results: clean statements, exact answers, no noise. Experimental science doesn't hand you that. It hands you detector noise, systematic uncertainties, and data that argues back.</p>
         </div>
 
-        <div class="grid">
-          <div class="card reveal">
-            <div class="icon">01</div>
-            <h3>Beyond the whiteboard</h3>
-            <p>Elegant theoretical results are falling to AI one after another. Impressive — and nothing like standing in front of a petabyte of messy collider data that refuses to be elegant.</p>
+        <div class="split reveal">
+          <div class="split-text">
+            <p>At the Large Hadron Collider, protons are accelerated to nearly the speed of light and smashed together 40 million times a second. Each collision sprays hundreds of particles through house-sized detectors, which record the debris as it curves through magnetic fields and dumps energy into layered calorimeters.</p>
+            <p>Out of that chaos, physicists reconstruct what actually happened: the tracks, the jets, the rare signatures that might point to new physics. It's pattern-finding at a scale and messiness no whiteboard proof prepares you for, and it's exactly the kind of challenge our environments are built from.</p>
           </div>
-          <div class="card reveal">
-            <div class="icon">02</div>
-            <h3>Reward the reasoning</h3>
-            <p>We score the whole scientific process, not just a final number — so agents learn to derive, check, and defend every step under real-world noise.</p>
-          </div>
-          <div class="card reveal">
-            <div class="icon">03</div>
-            <h3>Learn without a human</h3>
-            <p>Automated, verifiable feedback turns every attempt into training signal. The agent gets better at the science by actually doing the science.</p>
-          </div>
+          <figure class="event-display">
+            <canvas id="eventDisplay" width="460" height="460" role="img" aria-label="Simulated particle collision event display"></canvas>
+            <figcaption>A collision event: charged tracks curving outward from the interaction point, with energy deposited in the calorimeter.</figcaption>
+          </figure>
         </div>
       </div>
     </section>
@@ -471,7 +486,7 @@
           <span class="paper-tag">arXiv:2611.15885</span>
           <h3 class="paper-title">Reward-Driven Collider Physics Challenges for Self-Improving Agentic AI via Reinforcement Learning</h3>
           <div class="paper-authors">Alexander Yue · Qibin Liu · Julia Gonski</div>
-          <p class="paper-sum">We turn hard, still-unsolved high-energy physics problems into reinforcement-learning environments with automatic, continuously scored rewards. Frontier reasoning models still struggle with these tasks — so we demonstrate a proof of concept where a small language model teaches itself to do better through RL, with no human in the loop. It's a first step from AI that mimics known physics workflows toward agents that autonomously discover better science.</p>
+          <p class="paper-sum">We turn hard, still-unsolved high-energy physics problems into reinforcement-learning environments with automatic, continuously scored rewards. Frontier reasoning models still struggle with these tasks, so we demonstrate a proof of concept where a small language model teaches itself to do better through RL, with no human in the loop. It's a first step from AI that mimics known physics workflows toward agents that autonomously discover better science.</p>
           <span class="paper-link">Read the paper on arXiv →</span>
         </a>
       </div>
@@ -496,8 +511,8 @@
       <div class="wrap foot-inner">
         <div class="brand"><span class="dot"></span> Hard Scatter</div>
         <div class="foot-links">
-          <a href="#what">Platform</a>
-          <a href="#how">Approach</a>
+          <a href="#what">Product</a>
+          <a href="#how">Science</a>
           <a href="#join">Request access</a>
         </div>
         <div>© 2026 Hard Scatter, Inc. · San Francisco</div>
@@ -534,15 +549,96 @@
     e.preventDefault();
     const email = document.getElementById('email').value;
     const note = document.getElementById('formNote');
-    const subject = encodeURIComponent('Hard Scatter — beta access request');
+    const subject = encodeURIComponent('Hard Scatter: beta access request');
     const body = encodeURIComponent(
       'Hi Hard Scatter team,\n\nI\'d like to request beta access.\n\nMy email: ' + email + '\n'
     );
     window.location.href = 'mailto:contact@hardscatter.com?subject=' + subject + '&body=' + body;
-    note.textContent = "Opening your email app — send the message and we'll be in touch.";
+    note.textContent = "Opening your email app, send the message and we'll be in touch.";
     note.style.color = 'var(--accent-3)';
     return false;
   }
+
+  /* ---------- Collision event display ---------- */
+  (function () {
+    const canvas = document.getElementById('eventDisplay');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cx = W / 2, cy = H / 2;
+    const colors = ['#6ee7ff', '#a78bfa', '#34d399'];
+    const rTrk = 150;   // tracker radius
+    const rCal = 158;   // calorimeter inner edge
+
+    ctx.clearRect(0, 0, W, H);
+
+    // detector rings
+    [46, 94, 150, 190].forEach((r, i, arr) => {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(255,255,255,' + (i >= arr.length - 2 ? 0.14 : 0.07) + ')';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // charged-particle tracks (curved in B field) + calorimeter deposits
+    const N = 22;
+    for (let i = 0; i < N; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const pt = 0.45 + Math.random();                 // transverse momentum proxy
+      const charge = Math.random() < 0.5 ? 1 : -1;
+      const curv = charge * (0.9 / pt) * 0.011;         // bend per radial step
+      const col = colors[i % colors.length];
+
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      let a = theta;
+      for (let r = 2; r <= rTrk; r += 2) {
+        a += curv;
+        ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+      }
+      ctx.strokeStyle = col;
+      ctx.globalAlpha = 0.85;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+
+      // energy deposit at the track's exit angle
+      const exitA = theta + curv * (rTrk / 2);
+      const depo = 12 + pt * 30;
+      ctx.beginPath();
+      ctx.moveTo(cx + rCal * Math.cos(exitA), cy + rCal * Math.sin(exitA));
+      ctx.lineTo(cx + (rCal + depo) * Math.cos(exitA), cy + (rCal + depo) * Math.sin(exitA));
+      ctx.globalAlpha = 0.5;
+      ctx.lineWidth = 5;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    // neutral deposits (jets with no track)
+    for (let j = 0; j < 4; j++) {
+      const a = Math.random() * Math.PI * 2;
+      const depo = 16 + Math.random() * 28;
+      ctx.beginPath();
+      ctx.moveTo(cx + rCal * Math.cos(a), cy + rCal * Math.sin(a));
+      ctx.lineTo(cx + (rCal + depo) * Math.cos(a), cy + (rCal + depo) * Math.sin(a));
+      ctx.strokeStyle = '#f4f6fb';
+      ctx.globalAlpha = 0.22;
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+
+    // glowing interaction point
+    const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, 20);
+    g.addColorStop(0, 'rgba(255,255,255,0.95)');
+    g.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+    ctx.fill();
+  })();
 
   /* ---------- Scatter plot background ---------- */
   (function () {
