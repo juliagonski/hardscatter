@@ -296,6 +296,28 @@
   }
   .stat .label { color: var(--muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 6px; }
 
+  /* research paper card */
+  .paper {
+    display: block;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 44px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.01));
+    transition: transform .25s ease, border-color .25s ease;
+  }
+  .paper:hover { transform: translateY(-4px); border-color: rgba(110,231,255,0.35); }
+  .paper-tag {
+    display: inline-block; font-size: 12px; letter-spacing: 0.06em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--accent); border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 13px; margin-bottom: 22px;
+  }
+  .paper-title { font-size: clamp(21px, 3.1vw, 29px); line-height: 1.22; margin: 0 0 16px; letter-spacing: -0.02em; font-weight: 700; }
+  .paper-authors { color: var(--ink); font-size: 15px; margin-bottom: 18px; opacity: .82; }
+  .paper-sum { color: var(--muted); font-size: 16px; max-width: 780px; margin: 0 0 26px; }
+  .paper-link { color: var(--accent); font-weight: 600; font-size: 15px; }
+  @media (max-width: 560px) { .paper { padding: 30px 24px; } }
+
   /* CTA band */
   .cta-band {
     border: 1px solid var(--line);
@@ -385,25 +407,25 @@
       <div class="wrap">
         <div class="section-head reveal">
           <div class="kicker">The platform</div>
-          <h2>Reasoning engines that do the hard part.</h2>
-          <p class="lead">Hard Scatter builds AI that reasons from first principles — not pattern matching, but models trained to derive, verify, and defend every step.</p>
+          <h2>RL environments built from real physics.</h2>
+          <p class="lead">Hard Scatter turns unsolved experimental physics challenges into reinforcement-learning environments — with continuous, automatically verified rewards — to train AI agents that reason their way to new scientific results. The goal: autonomous scientific reasoning agents.</p>
         </div>
 
         <div class="grid">
           <div class="card reveal">
             <div class="icon">⚛️</div>
-            <h3>First-principles models</h3>
-            <p>Trained to reason the way scientists do — hypotheses, derivations, and checks that hold up under scrutiny.</p>
+            <h3>Experimental challenges</h3>
+            <p>Each environment is a genuine open problem from the frontier of experimental physics — posed as an open-ended optimization task, not a multiple-choice benchmark.</p>
           </div>
           <div class="card reveal">
-            <div class="icon">🔬</div>
-            <h3>Verifiable by design</h3>
-            <p>Every output ships with its reasoning trace. Nothing is a black box. Reproduce it, audit it, trust it.</p>
+            <div class="icon">🎯</div>
+            <h3>Verifiable rewards</h3>
+            <p>Every attempt is scored automatically against the physics — continuous reward, no human in the loop — so an agent can measurably improve run after run.</p>
           </div>
           <div class="card reveal">
-            <div class="icon">⚡</div>
-            <h3>Built for scale</h3>
-            <p>From a single derivation to a sweep of ten thousand, the engine parallelizes and keeps its receipts.</p>
+            <div class="icon">🤖</div>
+            <h3>Autonomous agents</h3>
+            <p>The goal isn't reproducing known workflows. It's self-improving agents that reason toward — and discover — better scientific solutions on their own.</p>
           </div>
         </div>
       </div>
@@ -412,26 +434,26 @@
     <section id="how">
       <div class="wrap">
         <div class="section-head reveal">
-          <div class="kicker">The approach</div>
-          <h2>Reinforce reasoning. Then let it work.</h2>
-          <p class="lead">We reward the process, not just the answer — so the model learns to show its work and get it right for the right reasons.</p>
+          <div class="kicker">Why it's hard</div>
+          <h2>Closing a proof is one thing. Real data is another.</h2>
+          <p class="lead">Lately the headlines belong to AI systems cracking famous theorems and closed-form results — clean statements, exact answers, no noise. Experimental science doesn't hand you that. It hands you detector noise, systematic uncertainties, and data that argues back.</p>
         </div>
 
         <div class="grid">
           <div class="card reveal">
             <div class="icon">01</div>
-            <h3>Pose the problem</h3>
-            <p>Hand it a question — physical, mathematical, or messy and real. It scopes assumptions before touching the math.</p>
+            <h3>Beyond the whiteboard</h3>
+            <p>Elegant theoretical results are falling to AI one after another. Impressive — and nothing like standing in front of a petabyte of messy collider data that refuses to be elegant.</p>
           </div>
           <div class="card reveal">
             <div class="icon">02</div>
-            <h3>Reason, don't guess</h3>
-            <p>Step-by-step derivation with self-verification baked in at every junction. Dead ends get backtracked, not hidden.</p>
+            <h3>Reward the reasoning</h3>
+            <p>We score the whole scientific process, not just a final number — so agents learn to derive, check, and defend every step under real-world noise.</p>
           </div>
           <div class="card reveal">
             <div class="icon">03</div>
-            <h3>Prove it out</h3>
-            <p>Dimensional checks, limiting cases, and adversarial review before anything is called a result.</p>
+            <h3>Learn without a human</h3>
+            <p>Automated, verifiable feedback turns every attempt into training signal. The agent gets better at the science by actually doing the science.</p>
           </div>
         </div>
       </div>
@@ -439,12 +461,19 @@
 
     <section id="numbers">
       <div class="wrap">
-        <div class="stats reveal">
-          <div class="stat"><div class="num">99.2%</div><div class="label">Steps verified</div></div>
-          <div class="stat"><div class="num">40×</div><div class="label">Faster iteration</div></div>
-          <div class="stat"><div class="num">0</div><div class="label">Black boxes</div></div>
-          <div class="stat"><div class="num">∞</div><div class="label">Reproducible runs</div></div>
+        <div class="section-head reveal">
+          <div class="kicker">Results</div>
+          <h2>The science behind it.</h2>
+          <p class="lead">Our approach, laid out in the research.</p>
         </div>
+
+        <a class="paper reveal" href="https://arxiv.org/abs/2611.15885" target="_blank" rel="noopener">
+          <span class="paper-tag">arXiv:2611.15885</span>
+          <h3 class="paper-title">Reward-Driven Collider Physics Challenges for Self-Improving Agentic AI via Reinforcement Learning</h3>
+          <div class="paper-authors">Alexander Yue · Qibin Liu · Julia Gonski</div>
+          <p class="paper-sum">We turn hard, still-unsolved high-energy physics problems into reinforcement-learning environments with automatic, continuously scored rewards. Frontier reasoning models still struggle with these tasks — so we demonstrate a proof of concept where a small language model teaches itself to do better through RL, with no human in the loop. It's a first step from AI that mimics known physics workflows toward agents that autonomously discover better science.</p>
+          <span class="paper-link">Read the paper on arXiv →</span>
+        </a>
       </div>
     </section>
 
