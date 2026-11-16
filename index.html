@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Hard Scatter</title>
+<meta name="description" content="Hard Scatter — artificial intelligence. real science." />
+<style>
+  :root {
+    --bg: #05060a;
+    --bg-soft: #0b0d14;
+    --ink: #f4f6fb;
+    --muted: #9aa3b8;
+    --line: rgba(255, 255, 255, 0.08);
+    --accent: #6ee7ff;
+    --accent-2: #a78bfa;
+    --accent-3: #34d399;
+    --max: 1120px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.55;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Ambient background ---------- */
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .aurora::before,
+  .aurora::after {
+    content: "";
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.35;
+    animation: drift 22s ease-in-out infinite alternate;
+  }
+  .aurora::before {
+    background: radial-gradient(circle at 30% 30%, var(--accent), transparent 60%);
+    top: -15vw;
+    left: -10vw;
+  }
+  .aurora::after {
+    background: radial-gradient(circle at 70% 70%, var(--accent-2), transparent 60%);
+    bottom: -20vw;
+    right: -12vw;
+    animation-delay: -8s;
+  }
+  @keyframes drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(4vw, 3vw, 0) scale(1.15); }
+  }
+
+  /* scatter dots */
+  #scatter {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  .shell { position: relative; z-index: 1; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    backdrop-filter: blur(12px);
+    background: rgba(5, 6, 10, 0.55);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+  .brand .dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 14px var(--accent);
+  }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a { color: var(--muted); font-size: 14px; transition: color .2s; }
+  .nav-links a:hover { color: var(--ink); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-size: 14px; font-weight: 600;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #05060a;
+    box-shadow: 0 8px 30px rgba(110, 231, 255, 0.25);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(167, 139, 250, 0.4); }
+  .btn-ghost { border-color: var(--line); color: var(--ink); background: rgba(255,255,255,0.02); }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.3); transform: translateY(-2px); }
+
+  @media (max-width: 720px) { .nav-links a:not(.btn) { display: none; } }
+
+  /* ---------- Hero ---------- */
+  header.hero {
+    position: relative;
+    text-align: center;
+    padding: 140px 0 120px;
+  }
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 6px 14px;
+    border-radius: 999px;
+    margin-bottom: 34px;
+    background: rgba(255,255,255,0.02);
+  }
+  .eyebrow .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent-3);
+    box-shadow: 0 0 10px var(--accent-3);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100%{ opacity: 1; } 50%{ opacity: .3; } }
+
+  h1.title {
+    margin: 0;
+    font-size: clamp(56px, 13vw, 164px);
+    line-height: 0.92;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    background: linear-gradient(180deg, #ffffff 0%, #b9c2db 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-transform: uppercase;
+  }
+  h1.title .amp {
+    display: block;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2) 55%, var(--accent-3));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* rotating subbanner */
+  .rotator {
+    height: 2.4em;
+    margin: 28px 0 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  .rotator-line {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(18px, 3vw, 30px);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    color: var(--muted);
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .rotator-line.active { opacity: 1; transform: translateY(0); }
+  .rotator-line em {
+    font-style: normal;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .rotator-line .hl {
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    font-weight: 700;
+  }
+
+  .hero-cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .scroll-hint {
+    margin-top: 72px;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .scroll-hint .arrow {
+    width: 1px; height: 36px;
+    background: linear-gradient(var(--muted), transparent);
+    animation: fall 1.8s ease-in-out infinite;
+  }
+  @keyframes fall { 0%{ transform: scaleY(0); transform-origin: top; } 50%{ transform: scaleY(1); transform-origin: top; } 51%{ transform-origin: bottom; } 100%{ transform: scaleY(0); transform-origin: bottom; } }
+
+  /* ---------- Sections ---------- */
+  section { padding: 110px 0; position: relative; }
+  .section-head { max-width: 640px; margin-bottom: 56px; }
+  .kicker {
+    font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+  }
+  h2 {
+    font-size: clamp(30px, 5vw, 46px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    margin: 0 0 18px;
+    font-weight: 700;
+  }
+  .lead { color: var(--muted); font-size: 18px; max-width: 560px; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 30px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    transition: transform .25s ease, border-color .25s ease, background .25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover { transform: translateY(-5px); border-color: rgba(110,231,255,0.35); }
+  .card .icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: grid; place-items: center;
+    background: rgba(110,231,255,0.1);
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+  .card h3 { margin: 0 0 10px; font-size: 20px; letter-spacing: -0.01em; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+
+  /* stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    padding: 44px 30px;
+    background: var(--bg-soft);
+  }
+  @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat { text-align: center; }
+  .stat .num {
+    font-size: clamp(32px, 5vw, 48px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .stat .label { color: var(--muted); font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; margin-top: 6px; }
+
+  /* CTA band */
+  .cta-band {
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 70px 40px;
+    text-align: center;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(167,139,250,0.18), transparent 60%),
+      var(--bg-soft);
+  }
+  .cta-band h2 { margin-bottom: 14px; }
+  .cta-band p { color: var(--muted); max-width: 520px; margin: 0 auto 32px; font-size: 18px; }
+
+  .form-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .form-row input {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 13px 20px;
+    color: var(--ink);
+    font-size: 15px;
+    min-width: 280px;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .form-row input:focus { border-color: var(--accent); }
+  .form-note { margin-top: 14px; font-size: 13px; color: var(--muted); }
+
+  /* footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 44px 0;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .foot-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .foot-links { display: flex; gap: 22px; }
+  .foot-links a:hover { color: var(--ink); }
+
+  /* reveal on scroll */
+  .reveal { opacity: 0; transform: translateY(26px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <canvas id="scatter"></canvas>
+
+  <div class="shell">
+    <nav>
+      <div class="wrap nav-inner">
+        <a class="brand" href="#top"><span class="dot"></span> Hard Scatter</a>
+        <div class="nav-links">
+          <a href="#what">Platform</a>
+          <a href="#how">Approach</a>
+          <a href="#numbers">Results</a>
+          <a class="btn btn-ghost" href="#join">Request access</a>
+        </div>
+      </div>
+    </nav>
+
+    <header class="hero" id="top">
+      <div class="wrap">
+        <span class="eyebrow"><span class="pulse"></span> Now in private beta</span>
+
+        <h1 class="title">Hard<span class="amp">Scatter</span></h1>
+
+        <div class="rotator" aria-live="polite">
+          <div class="rotator-line"><em>reinforce</em>&nbsp;<span class="hl">reasoning.</span></div>
+          <div class="rotator-line"><span class="hl">artificial intelligence.</span>&nbsp;<em>real science.</em></div>
+          <div class="rotator-line"><em>work it</em>&nbsp;<span class="hl">out.</span></div>
+        </div>
+
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#join">Request access →</a>
+          <a class="btn btn-ghost" href="#what">See how it works</a>
+        </div>
+
+        <div class="scroll-hint">
+          <span>Scroll</span>
+          <span class="arrow"></span>
+        </div>
+      </div>
+    </header>
+
+    <section id="what">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div class="kicker">The platform</div>
+          <h2>Reasoning engines that do the hard part.</h2>
+          <p class="lead">Hard Scatter builds AI that reasons from first principles — not pattern matching, but models trained to derive, verify, and defend every step.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card reveal">
+            <div class="icon">⚛️</div>
+            <h3>First-principles models</h3>
+            <p>Trained to reason the way scientists do — hypotheses, derivations, and checks that hold up under scrutiny.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icon">🔬</div>
+            <h3>Verifiable by design</h3>
+            <p>Every output ships with its reasoning trace. Nothing is a black box. Reproduce it, audit it, trust it.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icon">⚡</div>
+            <h3>Built for scale</h3>
+            <p>From a single derivation to a sweep of ten thousand, the engine parallelizes and keeps its receipts.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="wrap">
+        <div class="section-head reveal">
+          <div class="kicker">The approach</div>
+          <h2>Reinforce reasoning. Then let it work.</h2>
+          <p class="lead">We reward the process, not just the answer — so the model learns to show its work and get it right for the right reasons.</p>
+        </div>
+
+        <div class="grid">
+          <div class="card reveal">
+            <div class="icon">01</div>
+            <h3>Pose the problem</h3>
+            <p>Hand it a question — physical, mathematical, or messy and real. It scopes assumptions before touching the math.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icon">02</div>
+            <h3>Reason, don't guess</h3>
+            <p>Step-by-step derivation with self-verification baked in at every junction. Dead ends get backtracked, not hidden.</p>
+          </div>
+          <div class="card reveal">
+            <div class="icon">03</div>
+            <h3>Prove it out</h3>
+            <p>Dimensional checks, limiting cases, and adversarial review before anything is called a result.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="numbers">
+      <div class="wrap">
+        <div class="stats reveal">
+          <div class="stat"><div class="num">99.2%</div><div class="label">Steps verified</div></div>
+          <div class="stat"><div class="num">40×</div><div class="label">Faster iteration</div></div>
+          <div class="stat"><div class="num">0</div><div class="label">Black boxes</div></div>
+          <div class="stat"><div class="num">∞</div><div class="label">Reproducible runs</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="join">
+      <div class="wrap">
+        <div class="cta-band reveal">
+          <div class="kicker">Private beta</div>
+          <h2>Work it out with us.</h2>
+          <p>We're onboarding a small group of research teams. Drop your email and we'll reach out.</p>
+          <form class="form-row" onsubmit="return handleSignup(event)">
+            <input type="email" id="email" placeholder="you@lab.com" required />
+            <button class="btn btn-primary" type="submit">Request access</button>
+          </form>
+          <div class="form-note" id="formNote">No spam. Reaches us at contact@hardscatter.com.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap foot-inner">
+        <div class="brand"><span class="dot"></span> Hard Scatter</div>
+        <div class="foot-links">
+          <a href="#what">Platform</a>
+          <a href="#how">Approach</a>
+          <a href="#join">Request access</a>
+        </div>
+        <div>© 2026 Hard Scatter, Inc. · San Francisco</div>
+      </div>
+    </footer>
+  </div>
+
+<script>
+  /* ---------- Rotating subbanner ---------- */
+  (function () {
+    const lines = Array.from(document.querySelectorAll('.rotator-line'));
+    let i = 0;
+    lines[0].classList.add('active');
+    setInterval(() => {
+      lines[i].classList.remove('active');
+      i = (i + 1) % lines.length;
+      lines[i].classList.add('active');
+    }, 3200);
+  })();
+
+  /* ---------- Scroll reveal ---------- */
+  (function () {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) e.target.classList.add('in'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach((el, idx) => {
+      el.style.transitionDelay = (idx % 3) * 90 + 'ms';
+      io.observe(el);
+    });
+  })();
+
+  /* ---------- Signup handler (stub) ---------- */
+  function handleSignup(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const note = document.getElementById('formNote');
+    const subject = encodeURIComponent('Hard Scatter — beta access request');
+    const body = encodeURIComponent(
+      'Hi Hard Scatter team,\n\nI\'d like to request beta access.\n\nMy email: ' + email + '\n'
+    );
+    window.location.href = 'mailto:contact@hardscatter.com?subject=' + subject + '&body=' + body;
+    note.textContent = "Opening your email app — send the message and we'll be in touch.";
+    note.style.color = 'var(--accent-3)';
+    return false;
+  }
+
+  /* ---------- Scatter plot background ---------- */
+  (function () {
+    const canvas = document.getElementById('scatter');
+    const ctx = canvas.getContext('2d');
+    let w, h, pts;
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      const count = Math.min(90, Math.floor((w * h) / 18000));
+      pts = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        r: Math.random() * 1.6 + 0.6
+      }));
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, w, h);
+      for (const p of pts) {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > w) p.vx *= -1;
+        if (p.y < 0 || p.y > h) p.vy *= -1;
+      }
+      // links
+      for (let a = 0; a < pts.length; a++) {
+        for (let b = a + 1; b < pts.length; b++) {
+          const dx = pts[a].x - pts[b].x, dy = pts[a].y - pts[b].y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < 15000) {
+            ctx.strokeStyle = 'rgba(110,231,255,' + (1 - d2 / 15000) * 0.12 + ')';
+            ctx.beginPath();
+            ctx.moveTo(pts[a].x, pts[a].y);
+            ctx.lineTo(pts[b].x, pts[b].y);
+            ctx.stroke();
+          }
+        }
+      }
+      // dots
+      for (const p of pts) {
+        ctx.fillStyle = 'rgba(180,200,255,0.6)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+    tick();
+  })();
+</script>
+</body>
+</html>
